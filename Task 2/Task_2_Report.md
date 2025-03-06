@@ -8,24 +8,24 @@ Three models—Baseline Random Forest, Tuned Random Forest, and XGBoost—were t
 ---
 
 ## 1. Data Preprocessing Steps
-- **Dataset Loading**: Loads `healthcare_dataset.csv` using pandas, ensuring non-negative billing amounts.
-- **Missing Value Handling**: Fills missing values with mode (categorical) or median (numerical) for columns like `Age`, `Gender`, and `Test Results`.
+- **Dataset Loading**: Loaded `healthcare_dataset.csv` using pandas, ensuring non-negative billing amounts.
+- **Missing Value Handling**: Filled missing values with mode (categorical) or median (numerical) for columns like `Age`, `Gender`, and `Test Results`.
 - **Feature Engineering**:
-  - Converts `Date of Admission` and `Discharge Date` to datetime, calculating `Length of Stay` and its log-transformed version (`Length of Stay Log`).
-  - Creates `Age Bin` categories (`<50`, `50-70`, `>70`) with one-hot encoding.
-  - Assigns `Condition Severity` scores (e.g., Cancer: 3, Diabetes: 2) and computes `Age_HighRisk` as an interaction term.
-  - One-hot encodes `Medical Condition`.
-  - Defines `Risk` target: High-risk if (**Cancer or Diabetes AND Age > 70**) OR **abnormal test results**.
+  - Converted `Date of Admission` and `Discharge Date` to datetime, calculating `Length of Stay` and its log-transformed version (`Length of Stay Log`).
+  - Created `Age Bin` categories (`<50`, `50-70`, `>70`) with one-hot encoding.
+  - Assigned `Condition Severity` scores (e.g., Cancer: 3, Diabetes: 2) and computed `Age_HighRisk` as an interaction term.
+  - One-hot encoded `Medical Condition`.
+  - Defined `Risk` target: High-risk if (**Cancer or Diabetes AND Age > 70**) OR **abnormal test results**.
 
 ---
 
 ## 2. Model Development and Evaluation
-- **Features**: Includes `Age`, `Length of Stay Log`, `Condition Severity`, `Age_HighRisk`, and one-hot encoded variables.
+- **Features**: Included `Age`, `Length of Stay Log`, `Condition Severity`, `Age_HighRisk`, and one-hot encoded variables.
 - **Train-Test Split**: 70% training, 30% testing with a random seed of 42.
 - **Models**:
-  - **Experiment 1: Baseline Random Forest**: Uses balanced class weights, 100 estimators.
-  - **Experiment 2: Tuned Random Forest**: Employs GridSearchCV for hyperparameter tuning (`n_estimators`, `max_depth`, `min_samples_split`) with recall scoring and a **0.3 prediction threshold**.
-  - **Experiment 3: XGBoost**: Applies a `scale_pos_weight` of 1.5 for class imbalance.
+  - **Experiment 1: Baseline Random Forest**: Used balanced class weights, 100 estimators.
+  - **Experiment 2: Tuned Random Forest**: Employed GridSearchCV for hyperparameter tuning (`n_estimators`, `max_depth`, `min_samples_split`) with recall scoring and a **0.3 prediction threshold**.
+  - **Experiment 3: XGBoost**: Applied a `scale_pos_weight` of 1.5 for class imbalance.
 - **Evaluation Metrics**: Classification report, ROC-AUC score, confusion matrix for each model.
 
 ---
@@ -51,7 +51,7 @@ Three models—Baseline Random Forest, Tuned Random Forest, and XGBoost—were t
 
 ---
 
-## 📊 EDA Findings
+## EDA Findings
 ### 1. Class Distribution:
 - 61% **low-risk (Risk=0)**, 39% **high-risk (Risk=1)**, indicating **moderate class imbalance**.
 
@@ -74,9 +74,9 @@ Three models—Baseline Random Forest, Tuned Random Forest, and XGBoost—were t
 
 ---
 
-## 📈 Model Performance Comparison
+## Model Performance Comparison
 
-### **🟢 Experiment 1: Baseline Random Forest**
+### Experiment 1: Baseline Random Forest
 - **Metrics**:  
   - **Accuracy**: 0.58  
   - **High-risk recall**: 0.50  
@@ -84,7 +84,7 @@ Three models—Baseline Random Forest, Tuned Random Forest, and XGBoost—were t
 - **Output**: Balanced performance with moderate recall and precision.
 - **Confusion Matrix**: Reasonable **true positives** (high-risk detection) with some false positives.
 
-### **🟠 Experiment 2: Tuned Random Forest (Threshold 0.3)**
+### Experiment 2: Tuned Random Forest (Threshold 0.3)
 - **Metrics**:  
   - **Accuracy**: 0.39  
   - **High-risk recall**: Improved (higher due to threshold adjustment)  
@@ -92,42 +92,42 @@ Three models—Baseline Random Forest, Tuned Random Forest, and XGBoost—were t
 - **Output**: High recall at the **cost of low accuracy and excessive false positives**.
 - **Best Params**: Tuned via GridSearchCV (`n_estimators=200`, `max_depth=20`, `min_samples_split=5`).
 
-### **🔵 Experiment 3: XGBoost**
+### Experiment 3: XGBoost
 - **Metrics**:  
   - **Accuracy**: 0.64  
   - **High-risk recall**: 0.34  
   - **ROC-AUC**: 0.63  
 - **Output**: Higher accuracy but **lower recall for high-risk cases** compared to Baseline RF.
 
-### **📊 ROC Curve Comparison**
+### ROC Curve Comparison
 - **Baseline RF**: AUC = **0.635** (highest).
 - **Tuned RF**: Similar AUC but **impractical due to low accuracy**.
 - **XGBoost**: AUC = **0.63**, slightly lower than Baseline RF.
 
-**🏆 Winner**: **Baseline Random Forest**, balancing **recall (0.50)** and **ROC-AUC (0.635)** without sacrificing too much accuracy (**0.58**).
+**Winner**: **Baseline Random Forest**, balancing **recall (0.50)** and **ROC-AUC (0.635)** without sacrificing too much accuracy (**0.58**).
 
 ---
 
-## 🔬 Implications for Patient Care and Targeted Interventions
-### 1. **Key Predictors**
+## Implications for Patient Care and Targeted Interventions
+### 1. Key Predictors
 - **Age, Length of Stay, and Cancer/Diabetes** conditions drive risk, confirmed by EDA and feature importance.
 
-### 2. **Targeted Interventions**
+### 2. Targeted Interventions
 - Prioritize **elderly patients (>70) with Cancer or Diabetes** for **early screening and intervention**.
 - Monitor patients with **abnormal test results and extended hospital stays** closely.
 
-### 3. **Resource Allocation**
+### 3. Resource Allocation
 - **Baseline RF model avoids over-prediction** (unlike Tuned RF), ensuring **efficient use of medical resources**.
 
-### 4. **Practical Deployment**
+### 4. Practical Deployment
 - The saved model (`baseline_rf_model.pkl`) can be **integrated into hospital systems** for real-time risk assessment.
 
-### **💡 Business Insight**
+### Business Insight
 Implementing this model can **reduce adverse outcomes** by focusing resources on the **most vulnerable patients**, improving **care quality** and potentially **lowering costs** associated with untreated high-risk cases.
 
 ---
 
-## 📌 Conclusion
+## Conclusion
 The **Baseline Random Forest model** offers the **best trade-off** between **accuracy, recall, and ROC-AUC**, making it suitable for identifying high-risk patients. 
 
 The **EDA and feature importance** underscore the **clinical relevance** of **age and specific conditions**, aligning with **medical intuition**.
