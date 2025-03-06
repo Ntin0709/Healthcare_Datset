@@ -13,10 +13,8 @@ This contains code and analysis for identifying high-risk patients based on medi
 
  Running the Code
 - Open `notebooks/Task_2_Training.ipynb` in Jupyter Notebook or Colab and run all cells.
-- The trained model is saved as `models/baseline_rf_model.pkl`.
+- The trained model is saved as `Task_2/baseline_rf_model.pkl`.
 
  Outputs
 - Visualizations and model evaluations are displayed in the notebook.
-- Final report is in `Task_2/Report_2.pdf`.
-
-```
+- The final report is in `Task_2/Report_2.pdf`.
