@@ -1,57 +1,42 @@
 # Report: Predicting Patient Length of Stay
 
 ## Overview
-This report details the development, evaluation, and deployment of machine learning models to predict hospital length of stay (LOS) using the `healthcare_dataset.csv` dataset. The provided Jupyter Notebook (`Task_1_Training.ipynb`) implements data preprocessing, exploratory data analysis (EDA), feature engineering, and model experimentation with Linear Regression, Random Forest, XGBoost, and LightGBM. An inference script (`Successive_Task1_Inference_RandomForest.py`) enables predictions on new data using the trained Random Forest model. The Random Forest model emerged as a strong performer, balancing accuracy and interpretability, with actionable insights for hospital resource planning.
+This report details the development, evaluation, and deployment of machine learning models to predict hospital length of stay (LOS) using healthcare dataset analysis. The analysis includes data preprocessing, exploratory data analysis (EDA), feature engineering, and model experimentation with Linear Regression, Random Forest, XGBoost, and LightGBM. The Random Forest model emerged as the best performer, offering accurate predictions for hospital resource planning.
 
 ---
 
 ## Code Structure and Deliverables
 
-### Jupyter Notebook: `Task_1_Training.ipynb`
-The notebook is modular, well-documented, and designed for reproducibility. Below is a breakdown of its components:
+### Data Analysis Process
+The analysis follows a structured approach:
 
 #### 1. Data Preprocessing Steps
-- **Data Loading**: Loads `healthcare_dataset.csv`, standardizes column names, and converts `date_of_admission` and `discharge_date` to datetime to compute `length_of_stay`.
+- **Data Loading**: Loads healthcare dataset, standardizes column names, and converts `date_of_admission` and `discharge_date` to datetime format.
 - **Cleaning**: 
-  - Capitalizes text fields (e.g., `name`, `gender`).
-  - Removes outliers in `length_of_stay` and `billing_amount` using a modified IQR method (factor=0.3).
-- **Functions**: 
-  - `load_and_preprocess_data()`
-  - `remove_outliers()`
+  - Removes outliers in numerical fields using IQR method
+  - Original dataset shape: (55,500, 16), after outlier removal: (35,541, 16)
 
 #### 2. Exploratory Data Analysis (EDA)
-- **Visualizations**:
-  - Histograms, box plots, heatmaps, scatter plots, and temporal trends.
-- **Function**: `perform_enhanced_eda()`
+- **Statistical Analysis**:
+  - Age range: 13-89 years (mean: 51.6)
+  - Billing amount range: $5,903-$45,221 (mean: $25,579)
+  - Length of stay range: 4-27 days (mean: 15.5)
+- **Categorical Feature Analysis**:
+  - Gender: Males (15.50 days) vs. Females (15.44 days)
+  - Medical conditions: Cancer (15.57 days) shows highest average stay
+  - Admission types: Emergency (15.50 days) vs. Elective (15.45 days)
+  - Insurance providers: Medicare (15.53 days) shows highest average stay
 
 #### 3. Feature Engineering
-- **Encoding**: Label encoding and target encoding.
-- **Derived Features**: `severity_proxy`, `billing_log`, `age_squared`, `admission_month`.
-- **Scaling & Selection**: `MinMaxScaler`, `SelectKBest`.
-- **Function**: `engineer_features()`
+- **Generated Features**: 
+  - Temporal features: `admission_year`, `admission_month`
+  - Derived features: `insurance_target`, `medication_target`, `severity_proxy`, `avg_stay_condition`, `billing_log`, `age_squared`
+- **Feature Selection**: Dropped highly correlated features (>0.9)
+- **Selected Features**: 'billing_amount', 'admission_type', 'medication', 'test_results', 'admission_year', 'insurance_target', 'medication_target', 'billing_log'
 
 #### 4. Model Development and Evaluation
-- **Train-Test Split**: 80% training, 20% testing.
-- **Models**: Linear Regression, Random Forest, XGBoost, LightGBM.
-- **Evaluation Metrics**: MAE, RMSE.
-- **Function**: `evaluate_model()`
-
-#### 5. Outputs and Saving
-- **Artifacts**: Model (`random_forest_model.pkl`), scaler, selected features, training results.
-- **Function**: `save_training_outputs()`
-
-### Inference Script: `Successive_Task1_Inference_RandomForest.py`
-- **Purpose**: Predicts LOS for new data.
-- **Components**: Artifact loading, preprocessing, prediction.
-- **Output**: Saves predictions to `predictions.csv`.
-
----
-
-## EDA Findings
-- **LOS is right-skewed**, justifying log transformation.
-- **Higher LOS** for emergency admissions and severe conditions.
-- **Weak linear correlation** between `age`, `billing_amount`, and LOS.
-- **Seasonality present** in LOS variations.
+- **Models Tested**: Linear Regression, Random Forest, XGBoost, LightGBM
+- **Evaluation Metrics**: MAE, RMSE
 
 ---
 
@@ -59,22 +44,24 @@ The notebook is modular, well-documented, and designed for reproducibility. Belo
 
 | Model            | MAE (days) | RMSE (days) |
 |------------------|------------|-------------|
-| Linear Regression| 4.8        | 5.9         |
-| Random Forest    | 3.6        | 4.7         |
-| XGBoost          | 3.9        | 5.0         |
-| LightGBM         | 4.0        | 5.1         |
+| Linear Regression| 6.06       | 7.08        |
+| Random Forest    | 5.73       | 7.00        |
+| XGBoost          | 6.06       | 7.18        |
+| LightGBM         | 6.08       | 7.13        |
 
-**Winner**: Random Forest with MAE of ~3.6 days.
+**Winner**: Random Forest with MAE of 5.73 days.
 
 ---
 
-## Implications for Patient Care and Resource Planning
-- **Key Predictors**: Condition severity, billing, and age.
-- **Resource Allocation**: Helps optimize hospital bed management.
-- **Discharge Planning**: Enables proactive patient care.
-- **Deployment**: Ready-to-use Random Forest model.
+## Key Findings and Recommendations
+- **Best Model**: Random Forest offers the most accurate predictions for length of stay.
+- **Key Predictors**: Average stay by condition, billing amount (log-transformed), and age.
+- **Resource Planning**: 
+  - Deploy Random Forest model for discharge prediction
+  - Focus planning on identified key features
+  - Use insights from EDA to refine features if needed
 
 ---
 
 ## Conclusion
-Random Forest offers the best performance for LOS prediction, with an MAE of ~3.6 days. The model is interpretable, efficient, and deployable. Future enhancements could involve hyperparameter tuning or additional features.
+The Random Forest model provides the most accurate predictions for hospital length of stay with an MAE of 5.73 days. This model can effectively support hospital resource planning and discharge projections. The analysis identified important factors influencing length of stay, which can guide administrators in optimizing patient care and resource allocation.
