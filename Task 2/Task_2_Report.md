@@ -64,10 +64,7 @@ Three models—Baseline Random Forest, Tuned Random Forest, and XGBoost—were t
 ### 4. Length of Stay:
 - **Longer stays (log-transformed)** correlate with higher risk, suggesting complications.
 
-### 5. Condition Severity:
-- **Higher severity scores align with increased risk**, reinforcing the scoring system.
-
-### 6. Correlations:
+### 5. Correlations:
 - `Age`, `Age_HighRisk`, and **condition-specific features** (e.g., `Condition_Cancer`) show **positive correlations** with risk.
 
 **Insight**: **Age (>70), Cancer/Diabetes, and abnormal test results are strong predictors of high risk**, supporting the target definition.
