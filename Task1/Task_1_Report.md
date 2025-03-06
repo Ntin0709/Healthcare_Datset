@@ -30,7 +30,7 @@ The analysis follows a structured approach:
 #### 3. Feature Engineering
 - **Generated Features**: 
   - Temporal features: `admission_year`, `admission_month`
-  - Derived features: `insurance_target`, `medication_target`, `severity_proxy`, `avg_stay_condition`, `billing_log`, `age_squared`
+  - Derived features: `insurance_target`, `medication_target`, `avg_stay_condition`, `billing_log`, `age_squared`
 - **Feature Selection**: Dropped highly correlated features (>0.9)
 - **Selected Features**: 'billing_amount', 'admission_type', 'medication', 'test_results', 'admission_year', 'insurance_target', 'medication_target', 'billing_log'
 
